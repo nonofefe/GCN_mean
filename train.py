@@ -76,7 +76,7 @@ class NodeClsTrainer:
         loss.backward()
         optimizer.step()
 
-    def evaluate(self, miss_struct, width=0.1):
+    def evaluate(self, miss_struct, split=10):
         data, model = self.data, self.model
         model.eval()
 
@@ -85,6 +85,13 @@ class NodeClsTrainer:
             # print(output) #(2708,7)
 
         outputs = {}
+
+        data = np.arange(0.0, 1.0, 1/split)
+        data = np.round(data, 1)
+
+        for i in data:
+            print(i)
+
         for key in ['train', 'val', 'test']:
             if key == 'train':
                 mask = data.train_mask
