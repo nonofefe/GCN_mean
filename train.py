@@ -76,7 +76,7 @@ class NodeClsTrainer:
         loss.backward()
         optimizer.step()
 
-    def evaluate(self, miss_struct, split=10):
+    def evaluate(self, miss_struct, split=2):
         data, model = self.data, self.model
         model.eval()
 
@@ -86,11 +86,8 @@ class NodeClsTrainer:
 
         outputs = {}
 
-        data = np.arange(0.0, 1.0, 1/split)
-        data = np.round(data, 1)
-
-        for i in data:
-            print(i)
+        width = np.arange(0.0, 1.0, 1/split)
+        width = np.round(width, 1)
 
         for key in ['train', 'val', 'test']:
             if key == 'train':
@@ -99,16 +96,20 @@ class NodeClsTrainer:
                 mask = data.val_mask
             else:
                 mask = data.test_mask
-            print(mask.shape)
 
-            loss = F.nll_loss(output[mask], data.labels[mask]).item()
-            pred = output[mask].max(dim=1)[1]
-            #print(pred.shape)
-            acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
+            for i in width:
+                print(mask)
+                mask = mask & (i <= miss_struct.mask_neighbor) & (miss_struct.mask_neighbor < i+1/split)
+                print(mask)
+                print(mask.sum())
+                if mask.sum() == 0: continue
+                loss = F.nll_loss(output[mask], data.labels[mask]).item()
+                pred = output[mask].max(dim=1)[1]
+                #print(pred.shape)
+                acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
 
-            outputs['{}_loss'.format(key)] = loss
-            outputs['{}_acc'.format(key)] = acc
-
+                outputs['{}_{}_loss'.format(key,i)] = loss
+                outputs['{}_{}_acc'.format(key,i)] = acc
         return outputs
 
     def print_verbose(self, epoch, evals):
@@ -121,6 +122,9 @@ class NodeClsTrainer:
     def run(self, miss_struct):
         val_acc_list = []
         test_acc_list = []
+        split = 2
+        width = np.arange(0.0, 1.0, 1/split)
+        width = np.round(width, 1)
 
         for _ in tqdm(range(self.niter)):
             self.reset()
@@ -145,10 +149,12 @@ class NodeClsTrainer:
             if self.verbose:
                 for met, val in evals.items():
                     print(met, val)
-
-            val_acc_list.append(evals['val_acc'])
-            test_acc_list.append(evals['test_acc'])
-        print(test_acc_list)
+            for i in width:
+                val_acc_list[i].append(evals['val_{}_acc'].format(i))
+                test_acc_list[i].append(evals['test_{}_acc'].format(i))
+        for i in width:
+            print(mean(test_acc_list[i]))
+            print(std(test_acc_list[i]))
         print(mean(test_acc_list))
         print(std(test_acc_list))
         #この辺に欠損ごとの精度を出力する
