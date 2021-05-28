@@ -92,3 +92,15 @@ def apply_mask(features, mask):
 
     """
     features[mask] = float('nan')
+
+#追加
+def apply_zero(features, mask):
+    """
+
+    Parameters
+    ----------
+    features : torch.tensor
+    mask : torch.tensor
+
+    """
+    features[mask] = 0

@@ -76,12 +76,13 @@ class NodeClsTrainer:
         loss.backward()
         optimizer.step()
 
-    def evaluate(self):
+    def evaluate(self, miss_struct, width=0.1):
         data, model = self.data, self.model
         model.eval()
 
         with torch.no_grad():
             output = model(data)
+            # print(output) #(2708,7)
 
         outputs = {}
         for key in ['train', 'val', 'test']:
@@ -91,8 +92,11 @@ class NodeClsTrainer:
                 mask = data.val_mask
             else:
                 mask = data.test_mask
+            print(mask.shape)
+
             loss = F.nll_loss(output[mask], data.labels[mask]).item()
             pred = output[mask].max(dim=1)[1]
+            #print(pred.shape)
             acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
 
             outputs['{}_loss'.format(key)] = loss
@@ -107,7 +111,7 @@ class NodeClsTrainer:
               'val loss: {:.5f}'.format(evals['val_loss']),
               'val acc: {:.5f}'.format(evals['val_acc']))
 
-    def run(self):
+    def run(self, miss_struct):
         val_acc_list = []
         test_acc_list = []
 
@@ -118,7 +122,7 @@ class NodeClsTrainer:
 
             for epoch in range(1, self.epochs + 1):
                 self.train()
-                evals = self.evaluate()
+                evals = self.evaluate(miss_struct)
 
                 if self.verbose:
                     self.print_verbose(epoch, evals)
@@ -130,16 +134,20 @@ class NodeClsTrainer:
             if torch.cuda.is_available():
                 torch.cuda.synchronize()
 
-            evals = self.evaluate()
+            evals = self.evaluate(miss_struct)
             if self.verbose:
                 for met, val in evals.items():
                     print(met, val)
 
             val_acc_list.append(evals['val_acc'])
             test_acc_list.append(evals['test_acc'])
-
+        print(test_acc_list)
         print(mean(test_acc_list))
         print(std(test_acc_list))
+        #この辺に欠損ごとの精度を出力する
+
+
+
         return {
             'val_acc': mean(val_acc_list),
             'test_acc': mean(test_acc_list),

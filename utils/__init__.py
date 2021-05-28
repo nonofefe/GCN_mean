@@ -1,2 +1,2 @@
 from .data_utils import NodeClsData, LinkPredData
-from .missing import generate_mask, apply_mask
+from .missing import generate_mask, apply_mask, apply_zero
