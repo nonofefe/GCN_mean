@@ -1,9 +1,10 @@
 import numpy as np
 
 class MissStruct:
-    def __init__(self, mask, adj):
+    def __init__(self, mask, adj, split):
         self.mask = mask
         self.adj = adj
+        self.split = split
         self.mask_node = self.calculate_mask_node()
         self.mask_neighbor = self.calculate_mask_neighbor()
 
@@ -18,7 +19,6 @@ class MissStruct:
         adj_values = self.adj._values()
         ind_arr = self.adj._indices()
         n = self.adj._indices().size()[1]
-        print(ind_arr[0,0].item())
         for i in range(n):
             node1 = ind_arr[0,i].item()
             node2 = ind_arr[1,i].item()

@@ -76,7 +76,8 @@ class NodeClsTrainer:
         loss.backward()
         optimizer.step()
 
-    def evaluate(self, miss_struct, split=2):
+    def evaluate(self, miss_struct):
+        split = miss_struct.split
         data, model = self.data, self.model
         model.eval()
 
@@ -89,6 +90,7 @@ class NodeClsTrainer:
         width = np.arange(0.0, 1.0, 1/split)
         width = np.round(width, 1)
 
+
         for key in ['train', 'val', 'test']:
             if key == 'train':
                 mask = data.train_mask
@@ -97,19 +99,36 @@ class NodeClsTrainer:
             else:
                 mask = data.test_mask
 
-            for i in width:
-                print(mask)
-                mask = mask & (i <= miss_struct.mask_neighbor) & (miss_struct.mask_neighbor < i+1/split)
-                print(mask)
-                print(mask.sum())
-                if mask.sum() == 0: continue
+            if key == 'train' or key == 'val':
                 loss = F.nll_loss(output[mask], data.labels[mask]).item()
                 pred = output[mask].max(dim=1)[1]
-                #print(pred.shape)
                 acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
 
-                outputs['{}_{}_loss'.format(key,i)] = loss
-                outputs['{}_{}_acc'.format(key,i)] = acc
+                outputs['{}_loss'.format(key)] = loss
+                outputs['{}_acc'.format(key)] = acc
+            else:
+                cnt = 0
+                for i in width:
+                    # print(mask)
+                    # print(i)
+                    # print(i+1/split)
+                    #print(i)
+                    #print(miss_struct.mask_node)
+                    mask_i = mask & (i <= miss_struct.mask_node) & (miss_struct.mask_node <= i+1/split+0.001)
+                    #print(mask_i)
+                    # print(mask.sum())
+                    if mask_i.sum() == 0:
+                        outputs['{}_{}_acc'.format(key,cnt)] = np.nan
+                        cnt += 1
+                        continue
+                    loss = F.nll_loss(output[mask_i], data.labels[mask_i]).item()
+                    pred = output[mask_i].max(dim=1)[1]
+                    #print(pred.shape)
+                    acc = pred.eq(data.labels[mask_i]).sum().item() / mask_i.sum().item()
+                    # print('{}_{}_acc'.format(key,cnt))
+                    outputs['{}_{}_loss'.format(key,cnt)] = loss
+                    outputs['{}_{}_acc'.format(key,cnt)] = acc
+                    cnt += 1
         return outputs
 
     def print_verbose(self, epoch, evals):
@@ -120,11 +139,14 @@ class NodeClsTrainer:
               'val acc: {:.5f}'.format(evals['val_acc']))
 
     def run(self, miss_struct):
+        split = miss_struct.split
         val_acc_list = []
-        test_acc_list = []
-        split = 2
+        test_acc_list = list(range(split))
         width = np.arange(0.0, 1.0, 1/split)
         width = np.round(width, 1)
+
+        for i in range(split):
+            test_acc_list[i] = []
 
         for _ in tqdm(range(self.niter)):
             self.reset()
@@ -149,15 +171,16 @@ class NodeClsTrainer:
             if self.verbose:
                 for met, val in evals.items():
                     print(met, val)
-            for i in width:
-                val_acc_list[i].append(evals['val_{}_acc'].format(i))
-                test_acc_list[i].append(evals['test_{}_acc'].format(i))
-        for i in width:
+            val_acc_list.append(evals['val_acc'])
+            for i in range(split):
+                test_acc_list[i].append(evals['test_{}_acc'.format(i)])
+        for i in range(split):
+            print(i)
+            #print(len(test_acc_list[i]))
             print(mean(test_acc_list[i]))
-            print(std(test_acc_list[i]))
-        print(mean(test_acc_list))
-        print(std(test_acc_list))
-        #この辺に欠損ごとの精度を出力する
+            #print(std(test_acc_list[i]))
+        #print(mean(test_acc_list))
+        #print(std(test_acc_list))
 
 
 

@@ -30,7 +30,7 @@ parser.add_argument('--model',
                     default='GCNmf',
                     choices=['GCNmf', 'GCN'],
                     help='model name')
-
+parser.add_argument('--split', default=2, type=int, help='the number of split units')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     #     # print(mask_per_neighbor[i]) #特徴量
     # ko.a = mask_per_neighbor
     # ko.b = mask_per
-    miss_struct = MissStruct(mask,data.adj)
+    miss_struct = MissStruct(mask, data.adj, args.split)
 
     # for i in range(data.adj.size()[0]):
     #     print(miss_struct.mask_neighbor[i]) #特徴量
