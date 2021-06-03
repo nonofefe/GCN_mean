@@ -114,7 +114,7 @@ class NodeClsTrainer:
                     # print(i+1/split)
                     #print(i)
                     #print(miss_struct.mask_node)
-                    mask_i = mask & (i <= miss_struct.mask_node) & (miss_struct.mask_node <= i+1/split+0.001)
+                    mask_i = mask & (i <= miss_struct.mask_neighbor) & (miss_struct.mask_neighbor <= i+1/split+0.001)
                     #print(mask_i)
                     # print(mask.sum())
                     if mask_i.sum() == 0:
@@ -177,7 +177,11 @@ class NodeClsTrainer:
         for i in range(split):
             print(i)
             #print(len(test_acc_list[i]))
-            print(mean(test_acc_list[i]))
+            acc = mean(test_acc_list[i])
+            print(acc)
+            f = open('results/' + str(i) + '.txt', 'a')
+            f.write(str(acc) + '\n')
+            f.close()
             #print(std(test_acc_list[i]))
         #print(mean(test_acc_list))
         #print(std(test_acc_list))

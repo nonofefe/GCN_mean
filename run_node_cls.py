@@ -7,7 +7,6 @@ from miss_struct import MissStruct
 import numpy as np
 
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset',
                     default='cora',
