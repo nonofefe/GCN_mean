@@ -35,33 +35,16 @@ args = parser.parse_args()
 if __name__ == '__main__':
     data = NodeClsData(args.dataset)
     mask = generate_mask(data.features, args.rate, args.type)
-    # mask_per = sum(mask.t(),0) / float(mask.shape[1])
-    # mask_per_neighbor = mask_per * 0
-    # #print(mask_per)
-    # deg_list = np.zeros(mask_per.shape[0])
-    # adj_values = data.adj._values()
-    # ind_arr = data.adj._indices()
-    # n = data.adj._indices().size()[1]
-    # print(ind_arr[0,0].item())
-    # for i in range(n):
-    #     node1 = ind_arr[0,i].item()
-    #     node2 = ind_arr[1,i].item()
-    #     deg_list[node1] += 1
-    #     deg_list[node2] += 1
-    #     mask_per_neighbor[node1] += mask_per[node2]
-    #     # if node1 == 0:
-    #     #     print(mask_per[node2])
-    #     #     print(adj_values[i])
-            
-    # for i in range(mask_per.shape[0]):
-    #     deg_list[i] /= 2
-    
-    # for i in range(data.adj.size()[0]):
-    #     mask_per_neighbor[i] /= deg_list[i]
-    #     # print(mask_per_neighbor[i]) #特徴量
-    # ko.a = mask_per_neighbor
-    # ko.b = mask_per
     miss_struct = MissStruct(mask, data.adj, args.split)
+
+    miss_struct.degree /= 20
+    # len1 = len(miss_struct.degree)
+    # ma = 0
+    # for i in range(len1):
+    #     if miss_struct.degree[i] > ma:
+    #         ma = miss_struct.degree[i]
+    #     print(miss_struct.degree[i])
+    # print(ma)
 
     # for i in range(data.adj.size()[0]):
     #     print(miss_struct.mask_neighbor[i]) #特徴量

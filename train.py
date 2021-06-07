@@ -114,7 +114,7 @@ class NodeClsTrainer:
                     # print(i+1/split)
                     #print(i)
                     #print(miss_struct.mask_node)
-                    mask_i = mask & (i <= miss_struct.mask_neighbor) & (miss_struct.mask_neighbor <= i+1/split+0.001)
+                    mask_i = mask & (i <= miss_struct.degree) & (miss_struct.degree <= i+1/split+0.001)
                     #print(mask_i)
                     # print(mask.sum())
                     if mask_i.sum() == 0:
