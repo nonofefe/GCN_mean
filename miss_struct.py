@@ -8,6 +8,7 @@ class MissStruct:
         self.split = split
         self.mask_node = self.calculate_mask_node()
         self.degree, self.mask_neighbor = self.calculate_mask_neighbor()
+        self.degree /= 20 # 次数調整
 
     def calculate_mask_node(self):
         return sum(self.mask.t(),0) / float(self.mask.shape[1])

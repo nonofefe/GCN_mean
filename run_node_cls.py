@@ -6,6 +6,8 @@ from utils import NodeClsData, apply_mask, generate_mask, apply_zero
 from miss_struct import MissStruct
 import numpy as np
 
+from node2vec import Node2Vec
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset',
@@ -36,18 +38,14 @@ if __name__ == '__main__':
     data = NodeClsData(args.dataset)
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
-
-    miss_struct.degree /= 20
-    # len1 = len(miss_struct.degree)
-    # ma = 0
-    # for i in range(len1):
-    #     if miss_struct.degree[i] > ma:
-    #         ma = miss_struct.degree[i]
-    #     print(miss_struct.degree[i])
-    # print(ma)
-
-    # for i in range(data.adj.size()[0]):
-    #     print(miss_struct.mask_neighbor[i]) #特徴量
+    
+    node2vec = Node2Vec(data.G, dimensions=64,
+                        walk_length=3, num_walks=200, workers=8)
+    model = node2vec.fit(window=10, min_count=1, batch_words=4, workers=8)
+    output_dir = "hoge"
+    input_year = "bar"
+    model.save(f"{output_dir}/{input_year}_node2vec.model")
+    # M.node2vec(data.graph)
 
     apply_mask(data.features, mask)
 
