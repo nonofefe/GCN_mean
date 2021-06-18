@@ -175,16 +175,16 @@ class NodeClsTrainer:
             for i in range(split):
                 test_acc_list[i].append(evals['test_{}_acc'.format(i)])
         for i in range(split):
-            print(i)
+            #print(i)
             #print(len(test_acc_list[i]))
             acc = mean(test_acc_list[i])
-            print(acc)
+            #print(acc)
             f = open('results/' + str(i) + '.txt', 'a')
             f.write(str(acc) + '\n')
             f.close()
             #print(std(test_acc_list[i]))
-        #print(mean(test_acc_list))
-        #print(std(test_acc_list))
+        print(mean(test_acc_list))
+        print(std(test_acc_list))
 
 
 

@@ -2,11 +2,9 @@ import argparse
 
 from models import GCNmf, GCN
 from train import NodeClsTrainer
-from utils import NodeClsData, apply_mask, generate_mask, apply_zero
+from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean
 from miss_struct import MissStruct
 import numpy as np
-
-from node2vec import Node2Vec
 
 
 parser = argparse.ArgumentParser()
@@ -31,21 +29,13 @@ parser.add_argument('--model',
                     default='GCNmf',
                     choices=['GCNmf', 'GCN'],
                     help='model name')
-parser.add_argument('--split', default=2, type=int, help='the number of split units')
+parser.add_argument('--split', default=1, type=int, help='the number of split units')
 args = parser.parse_args()
 
 if __name__ == '__main__':
     data = NodeClsData(args.dataset)
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
-    
-    node2vec = Node2Vec(data.G, dimensions=64,
-                        walk_length=3, num_walks=200, workers=8)
-    model = node2vec.fit(window=10, min_count=1, batch_words=4, workers=8)
-    output_dir = "hoge"
-    input_year = "bar"
-    model.save(f"{output_dir}/{input_year}_node2vec.model")
-    # M.node2vec(data.graph)
 
     apply_mask(data.features, mask)
 
@@ -60,7 +50,13 @@ if __name__ == '__main__':
     if args.model == 'GCNmf':
         model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
     elif args.model == 'GCN':
-        apply_zero(data.features, mask)
+        if args.type == "struct":
+            print(mask)
+            print(data.features)
+            apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
+            print(data.features)
+        else:
+            apply_zero(data.features, mask)
         model = GCN(data, nhid=args.nhid, dropout=args.dropout)
     # model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
 
