@@ -76,21 +76,14 @@ class NodeClsTrainer:
         loss.backward()
         optimizer.step()
 
-    def evaluate(self, miss_struct):
-        split = miss_struct.split
+    def evaluate(self):
         data, model = self.data, self.model
         model.eval()
 
         with torch.no_grad():
             output = model(data)
-            # print(output) #(2708,7)
 
         outputs = {}
-
-        width = np.arange(0.0, 1.0, 1/split)
-        width = np.round(width, 1)
-
-
         for key in ['train', 'val', 'test']:
             if key == 'train':
                 mask = data.train_mask
@@ -98,37 +91,13 @@ class NodeClsTrainer:
                 mask = data.val_mask
             else:
                 mask = data.test_mask
+            loss = F.nll_loss(output[mask], data.labels[mask]).item()
+            pred = output[mask].max(dim=1)[1]
+            acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
 
-            if key == 'train' or key == 'val':
-                loss = F.nll_loss(output[mask], data.labels[mask]).item()
-                pred = output[mask].max(dim=1)[1]
-                acc = pred.eq(data.labels[mask]).sum().item() / mask.sum().item()
+            outputs['{}_loss'.format(key)] = loss
+            outputs['{}_acc'.format(key)] = acc
 
-                outputs['{}_loss'.format(key)] = loss
-                outputs['{}_acc'.format(key)] = acc
-            else:
-                cnt = 0
-                for i in width:
-                    # print(mask)
-                    # print(i)
-                    # print(i+1/split)
-                    #print(i)
-                    #print(miss_struct.mask_node)
-                    mask_i = mask & (i <= miss_struct.mask_node) & (miss_struct.mask_node <= i+1/split+0.001)
-                    #print(mask_i)
-                    # print(mask.sum())
-                    if mask_i.sum() == 0:
-                        outputs['{}_{}_acc'.format(key,cnt)] = np.nan
-                        cnt += 1
-                        continue
-                    loss = F.nll_loss(output[mask_i], data.labels[mask_i]).item()
-                    pred = output[mask_i].max(dim=1)[1]
-                    #print(pred.shape)
-                    acc = pred.eq(data.labels[mask_i]).sum().item() / mask_i.sum().item()
-                    # print('{}_{}_acc'.format(key,cnt))
-                    outputs['{}_{}_loss'.format(key,cnt)] = loss
-                    outputs['{}_{}_acc'.format(key,cnt)] = acc
-                    cnt += 1
         return outputs
 
     def print_verbose(self, epoch, evals):
@@ -138,15 +107,9 @@ class NodeClsTrainer:
               'val loss: {:.5f}'.format(evals['val_loss']),
               'val acc: {:.5f}'.format(evals['val_acc']))
 
-    def run(self, miss_struct):
-        split = miss_struct.split
+    def run(self):
         val_acc_list = []
-        test_acc_list = list(range(split))
-        width = np.arange(0.0, 1.0, 1/split)
-        width = np.round(width, 1)
-
-        for i in range(split):
-            test_acc_list[i] = []
+        test_acc_list = []
 
         for _ in tqdm(range(self.niter)):
             self.reset()
@@ -155,7 +118,7 @@ class NodeClsTrainer:
 
             for epoch in range(1, self.epochs + 1):
                 self.train()
-                evals = self.evaluate(miss_struct)
+                evals = self.evaluate()
 
                 if self.verbose:
                     self.print_verbose(epoch, evals)
@@ -167,29 +130,19 @@ class NodeClsTrainer:
             if torch.cuda.is_available():
                 torch.cuda.synchronize()
 
-            evals = self.evaluate(miss_struct)
+            evals = self.evaluate()
             if self.verbose:
                 for met, val in evals.items():
                     print(met, val)
+
             val_acc_list.append(evals['val_acc'])
-            for i in range(split):
-                test_acc_list[i].append(evals['test_{}_acc'.format(i)])
-        for i in range(split):
-            #print(i)
-            #print(len(test_acc_list[i]))
-            acc = mean(test_acc_list[i])
-            #print(acc)
-            f = open('results/' + str(i) + '.txt', 'a')
-            f.write(str(acc) + '\n')
-            f.close()
-            #print(std(test_acc_list[i]))
+            test_acc_list.append(evals['test_acc'])
+
         print(mean(test_acc_list))
         print(std(test_acc_list))
         file = open('log.txt','a')
         file.write('{:.4f} ± {:.4f}\n'.format(mean(test_acc_list),std(test_acc_list)))
         file.close()
-
-
         return {
             'val_acc': mean(val_acc_list),
             'test_acc': mean(test_acc_list),

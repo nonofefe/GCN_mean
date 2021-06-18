@@ -58,4 +58,4 @@ if __name__ == '__main__':
     # model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
 
     trainer = NodeClsTrainer(data, model, params, niter=20, verbose=args.verbose)
-    trainer.run(miss_struct)
+    trainer.run()
