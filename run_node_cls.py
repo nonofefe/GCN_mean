@@ -51,10 +51,7 @@ if __name__ == '__main__':
         model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
     elif args.model == 'GCN':
         if args.type == "struct":
-            print(mask)
-            print(data.features)
             apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
-            print(data.features)
         else:
             apply_zero(data.features, mask)
         model = GCN(data, nhid=args.nhid, dropout=args.dropout)
