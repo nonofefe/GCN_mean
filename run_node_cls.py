@@ -2,9 +2,10 @@ import argparse
 
 from models import GCNmf, GCN
 from train import NodeClsTrainer
-from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean
+from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean, preprocess_features
 from miss_struct import MissStruct
 import numpy as np
+import torch
 
 
 parser = argparse.ArgumentParser()
@@ -34,10 +35,13 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     data = NodeClsData(args.dataset)
+    #print(data.features.sum(axis=0))
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
 
     apply_mask(data.features, mask)
+
+    #featureの正規化はしていない
 
     params = {
         'lr': args.lr,
@@ -55,6 +59,9 @@ if __name__ == '__main__':
             apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
         else:
             apply_zero(data.features, mask)
+
+        data.features = preprocess_features(data.features)
+        
         model = GCN(data, nhid=args.nhid, dropout=args.dropout)
     # model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
 
