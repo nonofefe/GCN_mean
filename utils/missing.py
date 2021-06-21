@@ -106,19 +106,29 @@ def apply_zero(features, mask):
     features[mask] = 0
 
 def apply_neighbor_mean(features, mask, miss_struct, adj):
+    n_adj = adj.size()[0]
+    n_feat = features.size()[1]
+    n_edge = adj._indices().size()[1]
+
     X = torch.zeros_like(features)
-    n = adj._indices().size()[1]
     ind_arr = adj._indices()
-    for i in range(n):
+    dig_miss = torch.zeros(adj.shape[0])
+    for i in range(n_edge):
         node1 = ind_arr[0,i].item()
         node2 = ind_arr[1,i].item()
         if mask[node1,0] == False:
             X[node2] += features[node1]
+            dig_miss[node2] += 1
         if mask[node2,0] == False:
             X[node1] += features[node2]
+            dig_miss[node1] += 1
     
-    for i in range(X.shape[0]):
-        X[i] /= miss_struct.degree[i]
+    for i in range(n_adj):
+        if dig_miss[i] == 0:
+            dig_miss[i] = 1
+    dig_miss = dig_miss.repeat(n_feat,1).T
+    X = torch.div(X, dig_miss)
+    
     for i in range(X.shape[0]):
         if mask[i,0] == True:
             features[i] = X[i]
