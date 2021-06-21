@@ -248,14 +248,14 @@ def preprocess_features(features):
     """Row-normalize feature matrix and convert to tuple representation"""
     rowsum = np.array(features.sum(1))
     rowsum += 1e-15
-    print(features)
-    print(rowsum)
+    #print(features)
+    #print(rowsum)
     r_inv = np.power(rowsum, -1).flatten()
     r_inv[np.isinf(r_inv)] = 0.
     r_mat_inv = sp.diags(r_inv)
     features = r_mat_inv.dot(features)
     rowsum = np.array(features.sum(1))
-    print(features)
-    features *= 100
+    #print(rowsum)
+    #print(rowsum.shape)
     features = torch.from_numpy(features)
     return features

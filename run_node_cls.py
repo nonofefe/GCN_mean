@@ -60,8 +60,8 @@ if __name__ == '__main__':
         else:
             apply_zero(data.features, mask)
 
-        data.features = preprocess_features(data.features)
-        
+        #data.features = preprocess_features(data.features)
+
         model = GCN(data, nhid=args.nhid, dropout=args.dropout)
     # model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
 

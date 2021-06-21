@@ -69,7 +69,6 @@ for node in G.nodes():
   # else:
   #   colors.append("b")
 f.close()
-
 #図示するためのもの
 # for i in range(len(x)):
 #   ax.scatter(x[i], y[i], c=colors[i])
