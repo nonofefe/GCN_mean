@@ -5,3 +5,4 @@ networkx
 scikit-learn
 optuna
 tqdm
+gensim
