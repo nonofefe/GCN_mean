@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from gensim.models import Word2Vec as word2vec
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def make_random_walks(G, num_of_walk, length_of_walk):
   walks = list()

@@ -41,8 +41,6 @@ if __name__ == '__main__':
 
     apply_mask(data.features, mask)
 
-    #featureの正規化はしていない
-
     params = {
         'lr': args.lr,
         'weight_decay': args.wd,
