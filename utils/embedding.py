@@ -27,11 +27,10 @@ def get_emb_deepwalk(features, G, vector_size):
   # ランダムウォークを生成
   walks = make_random_walks(G, 20, 20)
   # gensim の Word2Vecを使った学習部分
-  model = word2vec(walks, min_count=0, vector_size=vector_size, window=5, workers=1)  
+  model = word2vec(walks, min_count=0, vector_size=vector_size, window=5, workers=1)
 
   size = features.shape[0]
   x = np.zeros((size,vector_size))
-  score = torch.zeros((size,size))
 
   cnt = 0
   for node in G.nodes():
@@ -64,21 +63,27 @@ def get_topk(features, mask, G, vector_size, top_num):
   return indices
 
 
-def apply_embedding_mean(features, mask, G, vector_size=16, top_num = 5):
+def apply_embedding_mean(features, mask, dataset, top_num=5):
   n_node = features.shape[0]
   n_feat = features.shape[1]
 
-  topk = get_topk(features, mask, G, vector_size, top_num)
+  topk = np.loadtxt('embedding/' + dataset + '.txt', delimiter=' ', dtype='int64')
   #print(topk.shape)
   #topk = torch.zeros((n_node,top_num),dtype=torch.long)
+  print(topk)
 
   X = torch.zeros_like(features)
 
   for i in range(n_node):
-    for j in range(top_num):
-      X[i] += features[topk[i,j]]
+    cnt = 0
+    for j in range(n_node):
+      if mask[topk[i,j],0] == False:
+        X[i] += features[topk[i,j]]
+        cnt += 1
+        if cnt >= top_num:
+          break
 
-  X /= top_num
+  X[i] /= top_num
   
   for i in range(X.shape[0]):
       if mask[i,0] == True:

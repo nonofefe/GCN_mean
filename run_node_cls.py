@@ -56,14 +56,13 @@ if __name__ == '__main__':
             #print("apply_neighbor_mean!!")
             #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
             print("apply_embedding_mean!!")
-            apply_embedding_mean(data.features, mask, data.G)
+            apply_embedding_mean(data.features, mask, args.dataset)
         else:
             apply_zero(data.features, mask)
 
         #data.features = preprocess_features(data.features)
 
         model = GCN(data, nhid=args.nhid, dropout=args.dropout)
-    # model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
 
     trainer = NodeClsTrainer(data, model, params, niter=20, verbose=args.verbose)
     trainer.run()

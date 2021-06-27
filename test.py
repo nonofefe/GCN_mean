@@ -1,8 +1,6 @@
 import numpy as np
+import torch
 
-# numpy.linalg.normを使う
-x = np.array([1,2,3,4,5])
-x_l2_norm = np.linalg.norm(x,ord=2)
-x_l2_normalized = x / x_l2_norm
+data = torch.from_numpy(np.loadtxt('embedding/cora.txt', delimiter=' ', dtype='int64'))
 
-print(x_l2_norm)
+print(data)
