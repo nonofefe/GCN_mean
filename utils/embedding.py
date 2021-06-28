@@ -83,7 +83,7 @@ def apply_embedding_mean(features, mask, dataset, top_num=5):
         if cnt >= top_num:
           break
 
-  X[i] /= top_num
+  X /= top_num
   
   for i in range(X.shape[0]):
       if mask[i,0] == True:
