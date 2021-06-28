@@ -70,7 +70,7 @@ def apply_embedding_mean(features, mask, dataset, top_num=5):
   topk = np.loadtxt('embedding/' + dataset + '.txt', delimiter=' ', dtype='int64')
   #print(topk.shape)
   #topk = torch.zeros((n_node,top_num),dtype=torch.long)
-  print(topk)
+  #print(topk)
 
   X = torch.zeros_like(features)
 
