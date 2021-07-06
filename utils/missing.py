@@ -135,7 +135,7 @@ def apply_neighbor_mean(features, mask, miss_struct, adj):
         if mask[i,0] == True:
             features[i] = X[i]
 
-def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=8):
+def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
   n_adj = adj.size()[0]
   n_feat = features.size()[1]
   n_edge = adj._indices().size()[1]
