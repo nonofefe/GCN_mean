@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from utils import get_degree
 
 class MissStruct:
@@ -8,7 +9,6 @@ class MissStruct:
         self.split = split
         self.mask_node = self.calculate_mask_node()
         self.degree, self.mask_neighbor = self.calculate_mask_neighbor()
-        self.degree /= 20 # 次数調整
 
     def calculate_mask_node(self):
         return sum(self.mask.t(),0) / float(self.mask.shape[1])
@@ -17,7 +17,7 @@ class MissStruct:
         mask_per = sum(self.mask.t(),0) / float(self.mask.shape[1])
         mask_per_neighbor = mask_per * 0
         #print(mask_per)
-        deg_list = np.zeros(mask_per.shape[0])
+        deg_list = torch.zeros(mask_per.shape[0])
         adj_values = self.adj._values()
         ind_arr = self.adj._indices()
         n = self.adj._indices().size()[1]
@@ -33,5 +33,4 @@ class MissStruct:
         
         for i in range(self.adj.size()[0]):
             mask_per_neighbor[i] /= deg_list[i]
-
         return deg_list, mask_per_neighbor

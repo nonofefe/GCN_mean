@@ -93,7 +93,7 @@ def apply_mask(features, mask):
     """
     features[mask] = float('nan')
 
-#追加
+# 0埋めするためのモデル
 def apply_zero(features, mask):
     """
 
@@ -105,6 +105,8 @@ def apply_zero(features, mask):
     """
     features[mask] = 0
 
+# 欠損値のない近隣ノードの平均で特徴量を埋める関数。
+# そのような近隣ノードがない場合は0埋め
 def apply_neighbor_mean(features, mask, miss_struct, adj):
     n_adj = adj.size()[0]
     n_feat = features.size()[1]
@@ -132,3 +134,27 @@ def apply_neighbor_mean(features, mask, miss_struct, adj):
     for i in range(X.shape[0]):
         if mask[i,0] == True:
             features[i] = X[i]
+
+def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=8):
+  n_adj = adj.size()[0]
+  n_feat = features.size()[1]
+  n_edge = adj._indices().size()[1]
+
+  apply_zero(features, mask)
+
+  ind_arr = adj._indices()
+
+  degree = miss_struct.degree
+  #print(degree)
+  for _ in range(epoch):
+    X = torch.zeros_like(features)
+    for i in range(n_edge):
+      node1 = ind_arr[0,i].item()
+      node2 = ind_arr[1,i].item()
+      X[node2] += features[node1]
+      X[node1] += features[node2]
+    for i in range(X.shape[0]):
+      X[i] /= 2 # エッジが倍存在するので
+      X[i] /= degree[i]
+      if mask[i,0] == True:
+        features[i] = X[i]

@@ -2,7 +2,7 @@ import argparse
 
 from models import GCNmf, GCN
 from train import NodeClsTrainer
-from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean, apply_embedding_mean, preprocess_features
+from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean, apply_neighbor_mean_recursive, apply_embedding_mean, preprocess_features
 from miss_struct import MissStruct
 import numpy as np
 import torch
@@ -50,19 +50,21 @@ if __name__ == '__main__':
     }
     model = 0
     if args.model == 'GCNmf':
-        model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
+      model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
     elif args.model == 'GCN':
-        if args.type == "struct":
-            #print("apply_neighbor_mean!!")
-            #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
-            print("apply_embedding_mean!!")
-            apply_embedding_mean(data.features, mask, args.dataset)
-        else:
-            apply_zero(data.features, mask)
+      if args.type == "struct":
+        #print("apply_neighbor_mean!!")  
+        #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
+        print("apply_neighbor_mean_recursive!!")  
+        apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj)       
+        #print("apply_embedding_mean!!")
+        #apply_embedding_mean(data.features, mask, args.dataset)
+      else:
+        apply_zero(data.features, mask)
 
-        #data.features = preprocess_features(data.features)
+      #data.features = preprocess_features(data.features)
 
-        model = GCN(data, nhid=args.nhid, dropout=args.dropout)
+      model = GCN(data, nhid=args.nhid, dropout=args.dropout)
 
     trainer = NodeClsTrainer(data, model, params, niter=20, verbose=args.verbose)
     trainer.run()
