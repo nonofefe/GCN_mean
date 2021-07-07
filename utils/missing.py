@@ -158,3 +158,6 @@ def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
       X[i] /= degree[i]
       if mask[i,0] == True:
         features[i] = X[i]
+
+def apply_mean_each(features, mask, miss_struct, adj, epoch=30):
+  print(features)

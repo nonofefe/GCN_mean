@@ -38,9 +38,9 @@ if __name__ == '__main__':
     #print(data.features.sum(axis=0))
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
-
+    print(data.features)
     apply_mask(data.features, mask)
-
+    print(data.features)
     params = {
         'lr': args.lr,
         'weight_decay': args.wd,
@@ -60,7 +60,9 @@ if __name__ == '__main__':
         #print("apply_embedding_mean!!")
         #apply_embedding_mean(data.features, mask, args.dataset)
       else:
-        apply_zero(data.features, mask)
+        print("apply_mean_each!!")
+        apply_mean_each(data.features, mask, miss_struct, data.adj)
+        #apply_zero(data.features, mask)
 
       #data.features = preprocess_features(data.features)
 
