@@ -38,9 +38,9 @@ if __name__ == '__main__':
     #print(data.features.sum(axis=0))
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
-    print(data.features)
+    #print(data.features)
     apply_mask(data.features, mask)
-    print(data.features)
+    #print(data.features)
     params = {
         'lr': args.lr,
         'weight_decay': args.wd,
