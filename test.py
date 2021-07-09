@@ -57,7 +57,7 @@ def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
   ind_arr = adj._indices()
 
   degree = miss_struct.degree
-  #print(degree)
+  mask_int = mask.to(torch.int)
   for _ in range(epoch):
     X = torch.zeros_like(features)
     for i in range(n_edge):
@@ -68,5 +68,8 @@ def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
     for i in range(X.shape[0]):
       X[i] /= 2 # エッジが倍存在するので
       X[i] /= degree[i]
-      if mask[i,0] == True:
-        features[i] = X[i]
+    Y = mask_int * X + (1 - mask_int) * features
+    features = Y
+    print(features)
+      # if mask[i,0] == True:
+      #   features[i] = X[i]
