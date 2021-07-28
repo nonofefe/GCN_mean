@@ -56,7 +56,7 @@ if __name__ == '__main__':
         #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
         #print("apply_embedding_mean!!")
         #apply_embedding_mean(data.features, mask, args.dataset)
-        print("apply_neighbor_mean_recursive!!")  
+        print("apply_neighbor_mean_recursive!!")
         apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj) 
       else:
         print("apply_mean_each!!")
