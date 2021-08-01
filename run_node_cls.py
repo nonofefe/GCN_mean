@@ -2,7 +2,7 @@ import argparse
 
 from models import GCNmf, GCN
 from train import NodeClsTrainer
-from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean, apply_neighbor_mean_recursive, apply_embedding_mean, apply_mean_each, preprocess_features
+from utils import NodeClsData, apply_mask, generate_mask, apply_zero, apply_neighbor_mean, apply_neighbor_mean_recursive, apply_embedding_mean, preprocess_features
 from miss_struct import MissStruct
 import numpy as np
 import torch
@@ -59,8 +59,8 @@ if __name__ == '__main__':
         print("apply_neighbor_mean_recursive!!")
         apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj) 
       else:
-        print("apply_mean_each!!")
-        apply_mean_each(data.features, mask, miss_struct, data.adj)
+        print("apply_neighbor_mean_recursive!!")
+        apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj) 
 
       model = GCN(data, nhid=args.nhid, dropout=args.dropout)
 
