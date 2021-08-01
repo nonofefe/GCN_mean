@@ -62,7 +62,7 @@ def get_topk(features, mask, G, vector_size, top_num):
 
   return indices
 
-
+# 現状はstructのみに適応可能
 def apply_embedding_mean(features, mask, dataset, top_num=5):
   n_node = features.shape[0]
   n_feat = features.shape[1]
