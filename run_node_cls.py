@@ -28,8 +28,8 @@ parser.add_argument('--epoch', default=10000, type=int, help='the number of trai
 parser.add_argument('--patience', default=100, type=int, help='patience for early stopping')
 parser.add_argument('--verbose', action='store_true', help='verbose')
 parser.add_argument('--model',
-                    default='GCNmf',
-                    choices=['GCNmf', 'GCN'],
+                    default='revursive',
+                    choices=['recursive', 'neighbor', 'embedding'],
                     help='model name')
 parser.add_argument('--split', default=1, type=int, help='the number of split units')
 args = parser.parse_args()
@@ -48,21 +48,16 @@ if __name__ == '__main__':
         'early_stopping': True
     }
     model = 0
-    if args.model == 'GCNmf':
-      model = GCNmf(data, nhid=args.nhid, dropout=args.dropout, n_components=args.ncomp)
-    elif args.model == 'GCN':
-      if args.type == "struct":
-        #print("apply_neighbor_mean!!")  
-        #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
-        #print("apply_embedding_mean!!")
-        #apply_embedding_mean(data.features, mask, args.dataset)
-        print("apply_neighbor_mean_recursive!!")
-        apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj) 
-      else:
-        print("apply_neighbor_mean_recursive!!")
-        apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj) 
+    if args.model == 'recursive':
+      print("apply_neighbor_mean_recursive!!")
+      apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj)
+    elif args.model == 'neighbor':
+      print("apply_neighbor_mean!!")  
+      apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
+    elif args.model == 'embedding': # structのみ対応
+      print("apply_embedding_mean!!")
+      apply_embedding_mean(data.features, mask, args.dataset)
 
-      model = GCN(data, nhid=args.nhid, dropout=args.dropout)
-
+    model = GCN(data, nhid=args.nhid, dropout=args.dropout)
     trainer = NodeClsTrainer(data, model, params, niter=20, verbose=args.verbose)
     trainer.run()
