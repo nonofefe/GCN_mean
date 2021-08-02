@@ -54,7 +54,7 @@ if __name__ == '__main__':
     elif args.model == 'neighbor':
       print("apply_neighbor_mean!!")  
       apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
-    elif args.model == 'embedding': # structのみ対応
+    elif args.model == 'embedding':
       print("apply_embedding_mean!!")
       apply_embedding_mean(data.features, mask, args.dataset)
 
