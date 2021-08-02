@@ -67,24 +67,17 @@ def apply_embedding_mean(features, mask, dataset, top_num=5):
   n_node = features.shape[0]
   n_feat = features.shape[1]
 
-  topk = np.loadtxt('embedding/' + dataset + '.txt', delimiter=' ', dtype='int64')
-  #print(topk.shape)
-  #topk = torch.zeros((n_node,top_num),dtype=torch.long)
-  #print(topk)
+  topk = np.loadtxt('embedding/' + dataset + '.txt', delimiter=' ', dtype='int64') # (n_node, n_node)
 
   X = torch.zeros_like(features)
-
   for i in range(n_node):
-    cnt = 0
-    for j in range(n_node):
-      if mask[topk[i,j],0] == False:
-        X[i] += features[topk[i,j]]
-        cnt += 1
-        if cnt >= top_num:
-          break
-
+    for j in range(n_feat):
+      cnt = 0
+      for k in range(n_node):
+        if mask[topk[i,k],j] == False:
+          X[i,j] += features[topk[i,k],j]
+          cnt += 1
+          if cnt >= top_num:
+            break
   X /= top_num
-  
-  for i in range(X.shape[0]):
-      if mask[i,0] == True:
-          features[i] = X[i]
+  features[mask] = X[mask]
