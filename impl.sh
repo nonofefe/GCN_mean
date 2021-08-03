@@ -1,5 +1,5 @@
 declare -a array=()
-declare -a array=("uniform")
+declare -a array=("uniform", "struct")
 
 for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
@@ -8,7 +8,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     do
         b=`echo "scale=1; $a / 10 " | bc`
         echo $b >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset citeseer --model neighbor
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset amaphoto --model neighbor
         a=`expr $a + 1`
     done
     t=`expr $t + 1`
