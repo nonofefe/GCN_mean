@@ -1,5 +1,5 @@
 declare -a array=()
-declare -a array=("struct")
+declare -a array=("uniform")
 
 for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
