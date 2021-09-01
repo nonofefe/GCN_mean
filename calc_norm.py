@@ -32,11 +32,12 @@ parser.add_argument('--model',
                     choices=['recursive', 'neighbor', 'embedding'],
                     help='model name')
 parser.add_argument('--split', default=1, type=int, help='the number of split units')
-parser.add_argument('--rec', default=1, type=int, help='the number of split units')
+parser.add_argument('--rec', default=100, type=int, help='the number of split units')
 args = parser.parse_args()
 
 if __name__ == '__main__':
     data = NodeClsData(args.dataset)
+    X_complete = copy.deepcopy(data.features)
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
     apply_mask(data.features, mask)
@@ -50,7 +51,9 @@ if __name__ == '__main__':
     model = 0
     if args.model == 'recursive':
       print("apply_neighbor_mean_recursive!!")
-      apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj,epoch=rec)
+      apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec, X_complete=X_complete)
+      norm = torch.norm(X_complete-data.features)
+      print(norm)
     elif args.model == 'neighbor':
       print("apply_neighbor_mean!!")  
       apply_neighbor_mean(data.features, mask, miss_struct, data.adj)

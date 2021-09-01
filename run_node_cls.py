@@ -51,7 +51,7 @@ if __name__ == '__main__':
     model = 0
     if args.model == 'recursive':
       print("apply_neighbor_mean_recursive!!")
-      apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj,epoch=rec)
+      apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec)
     elif args.model == 'neighbor':
       print("apply_neighbor_mean!!")  
       apply_neighbor_mean(data.features, mask, miss_struct, data.adj)

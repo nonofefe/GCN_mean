@@ -151,6 +151,8 @@ def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
       X[node2] += features[node1]
       X[node1] += features[node2]
     for i in range(X.shape[0]):
-      X[i] /= 2 # エッジが倍存在するので
+      X[i] /= 2
       X[i] /= degree[i]
     features[mask] = X[mask]
+    # norm = torch.norm(X_complete-features)
+    # print(norm)
