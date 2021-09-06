@@ -7,7 +7,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     echo "0" >> log.txt
     python run_node_cls.py --rate 0.8 --type ${array[i]} --dataset amacomp --model recursive --rec 0
     rec=1
-    while [ $a -lt 11 ]
+    while [ $a -lt 10 ]
     do
         b=`echo "scale=1; $a / 11 " | bc`
         b=0.8

@@ -32,7 +32,17 @@ import matplotlib.pyplot as plt
 #amaphoto
 #y = [90.62,91.10,91.11,91.24,90.92,90.89,90.83,90.81,90.85,90.85,90.93]
 #amacomp
-#y = []
+y = [82.79155,
+84.0262994,
+84.0164956,
+84.1044196,
+83.7680516,
+83.6381886,
+83.4032056,
+83.3328664,
+83.6021632,
+83.5620136,
+83.500856]
 
 x = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 
@@ -41,7 +51,7 @@ plt.scatter(x, y)
 plt.plot(x, y)
 plt.grid()
 
-plt.ylim([85,95])
+plt.ylim([75,85])
 plt.semilogx(base=2)
 plt.xlabel("the number of recursion", fontsize=20)
 plt.ylabel("Accuracy", fontsize=20)
