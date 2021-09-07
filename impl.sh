@@ -12,7 +12,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
         b=`echo "scale=1; $a / 11 " | bc`
         b=0.8
         echo $rec >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset amaphoto--model recursive --rec $rec
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset amaphoto --model recursive --rec $rec
         rec=`expr 2 \* $rec`
         a=`expr $a + 1`
     done
