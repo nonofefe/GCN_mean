@@ -7,7 +7,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     while [ $a -lt 10 ]
     do
         b=`echo "scale=1; $a / 10 " | bc`
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset amaphoto --model recursive
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset amacomp --model recursive
         a=`expr $a + 1`
     done
     t=`expr $t + 1`
