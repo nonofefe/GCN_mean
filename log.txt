@@ -18,3 +18,10 @@ type = bias
 type = bias
 type = bias
 type = bias
+type = uniform
+0
+1
+type = uniform
+0
+type = uniform
+0
