@@ -21,55 +21,32 @@ import time
 # print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 # print(x)
 
+# MAXSIZE = 2000
+# ite = 10000
 
-# k = 0
-# a = 0
-# b = 0
-# c = 1
-# for i in range(100):
-#   kk = (k+a)/2
-#   aa = (a+b+k)/3
-#   bb = (a+b+c)/3
-#   a = aa
-#   b = bb
-#   k = kk
-#   print(k, end=" ")
-#   print(a, end=" ")
-#   print(b, end=" ")
-#   print(c)
+# arr = np.zeros(MAXSIZE)
+# arr_next = np.zeros(MAXSIZE)
+# arr[0] = 1
+# for _ in range(ite):
+#   for i in range(MAXSIZE):
+#     if i == 0:
+#       arr_next[i] = arr[i]
+#     elif i == MAXSIZE-1:
+#       arr_next[i] = (arr[i] + arr[i-1]) / 2
+#     else:
+#       arr_next[i] = (arr[i-1] + arr[i] + arr[i+1]) / 3
+#   arr = arr_next
+# print(arr)
 
-a = torch.ones((2,3))
-b = torch.ones((2,3))
-b += 1
-mask = torch.tensor([[True, False, False],[False,False,True]])
-mask_int = mask.to(torch.int)
-c = mask_int * a + (1 - mask_int) * b
-print(c)
+MAXSIZE = 2000
+ite = 20000
 
-
-def apply_neighbor_mean_recursive(features, mask, miss_struct, adj, epoch=30):
-  n_adj = adj.size()[0]
-  n_feat = features.size()[1]
-  n_edge = adj._indices().size()[1]
-
-  apply_zero(features, mask)
-
-  ind_arr = adj._indices()
-
-  degree = miss_struct.degree
-  mask_int = mask.to(torch.int)
-  for _ in range(epoch):
-    X = torch.zeros_like(features)
-    for i in range(n_edge):
-      node1 = ind_arr[0,i].item()
-      node2 = ind_arr[1,i].item()
-      X[node2] += features[node1]
-      X[node1] += features[node2]
-    for i in range(X.shape[0]):
-      X[i] /= 2 # エッジが倍存在するので
-      X[i] /= degree[i]
-    Y = mask_int * X + (1 - mask_int) * features
-    features = Y
-    print(features)
-      # if mask[i,0] == True:
-      #   features[i] = X[i]
+arr = np.zeros(3)
+arr_next = np.zeros(3)
+arr[0] = 1
+for _d in range(ite):
+  arr_next[0] = arr[0]
+  arr_next[1] = (arr[0] + arr[1] + (MAXSIZE-2) * arr[2]) / MAXSIZE
+  arr_next[2] = (arr[1] + arr[2]) / 2
+  arr = arr_next
+  print(arr)
