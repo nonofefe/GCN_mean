@@ -139,7 +139,7 @@ class NodeClsTrainer:
             test_acc_list.append(evals['test_acc'])
 
         print(mean(test_acc_list) * 100)
-        print(std(test_acc_list))
+        #print(std(test_acc_list))
         file = open('log.txt','a')
         file.write('{:.4f} ± {:.4f}\n'.format(mean(test_acc_list),std(test_acc_list)))
         file.close()
