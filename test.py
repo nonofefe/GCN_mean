@@ -38,15 +38,29 @@ import time
 #   arr = arr_next
 # print(arr)
 
-MAXSIZE = 2000
-ite = 20000
+# MAXSIZE = 2000
+# ite = 20000
 
-arr = np.zeros(3)
-arr_next = np.zeros(3)
-arr[0] = 1
-for _d in range(ite):
-  arr_next[0] = arr[0]
-  arr_next[1] = (arr[0] + arr[1] + (MAXSIZE-2) * arr[2]) / MAXSIZE
-  arr_next[2] = (arr[1] + arr[2]) / 2
-  arr = arr_next
-  print(arr)
+# arr = np.zeros(3)
+# arr_next = np.zeros(3)
+# arr[0] = 1
+# for _d in range(ite):
+#   arr_next[0] = arr[0]
+#   arr_next[1] = (arr[0] + arr[1] + (MAXSIZE-2) * arr[2]) / MAXSIZE
+#   arr_next[2] = (arr[1] + arr[2]) / 2
+#   arr = arr_next
+#   print(arr)
+
+import matplotlib.pyplot as plt
+import numpy as np
+N = 300
+xmin = 0.01
+xmax = 3
+x = np.linspace(xmin, xmax, N)
+y = 1.40 / pow(x, 0.24)
+#plt.title("Learning Curve")
+plt.xlabel("N")
+plt.ylabel("RT")
+plt.plot(x, y, label="Learning Curve")
+plt.legend()
+plt.savefig("learningCurve.png")
