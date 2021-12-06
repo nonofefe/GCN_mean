@@ -51,16 +51,3 @@ import time
 #   arr = arr_next
 #   print(arr)
 
-import matplotlib.pyplot as plt
-import numpy as np
-N = 300
-xmin = 0.01
-xmax = 3
-x = np.linspace(xmin, xmax, N)
-y = 1.40 / pow(x, 0.24)
-#plt.title("Learning Curve")
-plt.xlabel("N")
-plt.ylabel("RT")
-plt.plot(x, y, label="Learning Curve")
-plt.legend()
-plt.savefig("learningCurve.png")
