@@ -2,16 +2,11 @@ declare -a array=()
 declare -a array=("struct")
 
 for ((i = 0; i < ${#array[@]}; i++)) {
-    echo "type = ${array[i]}" >> log.txt
     a=0
-    echo "0" >> log.txt
-    python run_node_cls.py --rate 0.2 --type ${array[i]} --dataset amacomp --model recursive --rec 0
-    rec=1
     while [ $a -lt 10 ]
     do
-        b=0.2
         echo $rec >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset amacomp --model recursive --rec $rec
+        python run_link_pred.py --rate $a --type ${array[i]} --dataset cora
         rec=`expr 2 \* $rec`
         a=`expr $a + 1`
     done
