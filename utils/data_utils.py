@@ -198,6 +198,9 @@ def split_edges(G, val_ratio, test_ratio):
     val_edges = torch.LongTensor(edges[:n_val_edges]).t()
     test_edges = torch.LongTensor(edges[n_val_edges: n_val_edges + n_test_edges]).t()
     train_edges = torch.LongTensor(edges[n_val_edges + n_test_edges:]).t()
+    print(train_edges.size())
+    print(val_edges.size())
+    print(test_edges.size())
     return train_edges, val_edges, test_edges
 
 
