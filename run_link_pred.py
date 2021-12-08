@@ -21,7 +21,7 @@ parser.add_argument('--latent_dim', default=16, type=int, help='the dimension of
 parser.add_argument('--dropout', default=0., type=float, help='dropout rate')
 parser.add_argument('--ncomp', default=5, type=int, help='the number of Gaussian components')
 parser.add_argument('--lr', default=0.005, type=float, help='learning rate')
-parser.add_argument('--wd', default=0.005, type=float, help='weight decay')
+parser.add_argument('--wd', default=0., type=float, help='weight decay')
 parser.add_argument('--epoch', default=1000, type=int, help='the number of training epochs')
 parser.add_argument('--verbose', action='store_true', help='verbose')
 parser.add_argument('--split', default=1, type=int, help='the number of split units')
