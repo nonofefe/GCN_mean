@@ -1,8 +1,8 @@
 import argparse
 
-from models import VGAEmf
+from models import VGAE, VGAEmf
 from train import LinkPredTrainer
-from utils import LinkPredData, apply_mask, generate_mask
+from utils import LinkPredData, apply_mask, generate_mask,apply_neighbor_mean_recursive
 
 
 parser = argparse.ArgumentParser()
@@ -30,7 +30,8 @@ if __name__ == '__main__':
     data = LinkPredData(args.dataset)
     mask = generate_mask(data.features, args.rate, args.type)
     apply_mask(data.features, mask)
-    model = VGAEmf(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout, n_components=args.ncomp)
+    #apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec)
+    model = VGAE(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout, n_components=args.ncomp)
     params = {
         'lr': args.lr,
         'weight_decay': args.wd,
