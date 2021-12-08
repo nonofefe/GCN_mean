@@ -28,3 +28,19 @@ type = uniform
 
 type = uniform
 0
+type = uniform
+0
+.1
+.2
+type = uniform
+0
+.1
+type = uniform
+0
+.1
+.2
+type = uniform
+0
+.1
+type = uniform
+0

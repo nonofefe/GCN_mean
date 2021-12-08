@@ -3,6 +3,7 @@ import argparse
 from models import VGAE, VGAEmf
 from train import LinkPredTrainer
 from utils import LinkPredData, apply_mask, generate_mask,apply_neighbor_mean_recursive
+from miss_struct import MissStruct
 
 
 parser = argparse.ArgumentParser()
@@ -23,15 +24,19 @@ parser.add_argument('--lr', default=0.005, type=float, help='learning rate')
 parser.add_argument('--wd', default=0.005, type=float, help='weight decay')
 parser.add_argument('--epoch', default=1000, type=int, help='the number of training epochs')
 parser.add_argument('--verbose', action='store_true', help='verbose')
+parser.add_argument('--split', default=1, type=int, help='the number of split units')
+parser.add_argument('--rec', default=1, type=int, help='the number of split units')
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
     data = LinkPredData(args.dataset)
     mask = generate_mask(data.features, args.rate, args.type)
+    miss_struct = MissStruct(mask, data.adj, args.split)
     apply_mask(data.features, mask)
-    #apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec)
-    model = VGAE(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout, n_components=args.ncomp)
+
+    model = VGAE(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout)
+    apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec)
     params = {
         'lr': args.lr,
         'weight_decay': args.wd,
