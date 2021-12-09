@@ -2,7 +2,7 @@ import argparse
 
 from models import VGAE, VGAEmf
 from train import LinkPredTrainer
-from utils import LinkPredData, apply_mask, generate_mask,apply_neighbor_mean_recursive
+from utils import LinkPredData, apply_mask, generate_mask,apply_neighbor_mean_recursive, apply_neighbor_mean
 from miss_struct import MissStruct
 
 
@@ -34,7 +34,8 @@ if __name__ == '__main__':
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj, args.split)
     apply_mask(data.features, mask)
-    apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj, epoch=args.rec)
+    apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj)
+    #apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
     model = VGAE(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout)
     params = {
         'lr': args.lr,
