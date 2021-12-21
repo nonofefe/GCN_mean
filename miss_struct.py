@@ -3,7 +3,7 @@ import torch
 from utils import get_degree
 
 class MissStruct:
-    def __init__(self, mask, adj, split):
+    def __init__(self, mask, adj, split=1):
         self.mask = mask
         self.adj = adj
         self.split = split
