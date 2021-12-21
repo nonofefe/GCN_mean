@@ -133,3 +133,30 @@ type = uniform
 .9
 type = uniform
 0
+type = struct
+0
+1
+2
+4
+8
+16
+32
+64
+128
+256
+512
+type = struct
+0
+1
+type = struct
+0
+1
+2
+4
+8
+16
+32
+type = struct
+0
+type = struct
+0
