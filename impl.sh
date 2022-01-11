@@ -5,7 +5,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
     a=0
     echo "0" >> log.txt
-    python run_node_cls.py --rate 0.5 --type ${array[i]} --dataset amacomp --model recursive --rec 0
+    python run_node_cls.py --rate 0.2 --type ${array[i]} --dataset amacomp --model recursive --rec 0
     rec=1
     while [ $a -lt 10 ]
     do
