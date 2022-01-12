@@ -1,7 +1,7 @@
 declare -a array=()
 declare -a array=("bias")
 
-dataset="citeseer"
+dataset="amaphoto"
 
 for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
