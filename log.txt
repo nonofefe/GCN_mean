@@ -25,3 +25,9 @@ type = uniform
 0
 type = uniform
 0
+type = bias
+0
+1
+2
+type = bias
+0
