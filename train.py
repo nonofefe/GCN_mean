@@ -228,7 +228,7 @@ class LinkPredTrainer:
             test_auc_list.append(evals['test_auc'])
             test_ap_list.append(evals['test_ap'])
       
-        print(mean(test_auc_list))
+        print(mean(test_auc_list)*100)
         return {
             "val_auc": mean(val_auc_list),
             "val_ap": mean(val_ap_list),
