@@ -1,5 +1,5 @@
 declare -a array=()
-declare -a array=("bias")
+declare -a array=("struct")
 
 for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
