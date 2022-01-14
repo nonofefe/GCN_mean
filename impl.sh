@@ -1,5 +1,5 @@
 declare -a array=()
-declare -a array=("struct")
+declare -a array=("uniform")
 
 for ((i = 0; i < ${#array[@]}; i++)) {
     echo "type = ${array[i]}" >> log.txt
@@ -8,7 +8,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     do
         b=`echo "scale=1; $a / 10 " | bc`
         echo $b >> log.txt
-        python run_link_pred.py --rate $b --type ${array[i]} --dataset cora
+        python run_link_pred.py --rate $b --type ${array[i]} --dataset citeseer
         a=`expr $a + 1`
     done
 }
