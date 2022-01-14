@@ -34,7 +34,8 @@ if __name__ == '__main__':
     mask = generate_mask(data.features, args.rate, args.type)
     miss_struct = MissStruct(mask, data.adj)
     apply_mask(data.features, mask)
-    apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj)
+    #apply_neighbor_mean_recursive(data.features, mask, miss_struct, data.adj)
+    apply_neighbor_mean(data.features, mask, miss_struct, data.adj)
     model = VGAE(data, nhid=args.nhid, latent_dim=args.latent_dim, dropout=args.dropout)
     params = {
         'lr': args.lr,
