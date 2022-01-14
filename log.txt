@@ -35,3 +35,21 @@ type = bias
 0
 type = uniform
 0
+type = uniform
+0
+type = uniform
+0
+0.6055 ± 0.3083
+.1
+type = uniform
+0
+0.8191 ± 0.0086
+.1
+0.8012 ± 0.0073
+.2
+type = uniform
+0
+0.8137 ± 0.0085
+.1
+0.8010 ± 0.0098
+.2

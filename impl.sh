@@ -8,9 +8,10 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     do
         b=`echo "scale=1; $a / 10 " | bc`
         echo $b >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset cora --rec 30 --lr 0.01 --epoch 200 --patience 10
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset cora --model neighbor --epoch 200 --patience 10 --lr 0.01
         a=`expr $a + 1`
     done
+    t=`expr $t + 1`
 }
 
 for ((i = 0; i < ${#array[@]}; i++)) {
@@ -20,7 +21,8 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     do
         b=`echo "scale=1; $a / 10 " | bc`
         echo $b >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset citeseer --rec 30 --lr 0.01 --epoch 200 --patience 10
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset cora --model neighbor --epoch 200 --patience 10 --lr 0.01
         a=`expr $a + 1`
     done
+    t=`expr $t + 1`
 }
