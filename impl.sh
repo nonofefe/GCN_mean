@@ -8,7 +8,7 @@ for ((i = 0; i < ${#array[@]}; i++)) {
     do
         b=`echo "scale=1; $a / 10 " | bc`
         echo $b >> log.txt
-        python run_node_cls.py --rate $b --type ${array[i]} --dataset $cora --rec 30 --lr 0.01 --epoch 200 --patience 10
+        python run_node_cls.py --rate $b --type ${array[i]} --dataset cora --rec 30 --lr 0.01 --epoch 200 --patience 10
         a=`expr $a + 1`
     done
 }
