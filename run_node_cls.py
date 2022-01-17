@@ -32,7 +32,7 @@ parser.add_argument('--model',
                     choices=['recursive', 'neighbor', 'embedding'],
                     help='model name')
 parser.add_argument('--split', default=1, type=int, help='the number of split units')
-parser.add_argument('--rec', default=1, type=int, help='the number of split units')
+parser.add_argument('--rec', default=32, type=int, help='the number of split units')
 args = parser.parse_args()
 
 if __name__ == '__main__':
